@@ -16,6 +16,13 @@ class PrintArrayCommand extends Command
         'Likes',
     );
 
+    private $columnColorsMapping = array(
+        'Name' => 'info',
+        'Color' => 'comment',
+        'Element' => 'question',
+        'Likes' => 'error',
+    );
+
     private $toPrintBody = array(
         array(
             'Name' => 'Trixie',
@@ -70,12 +77,30 @@ class PrintArrayCommand extends Command
             $normalizedBodyElement = array();
 
             foreach ($header as $headerElement) {
-                $normalizedBodyElement[$headerElement] = $row[$headerElement];
+                $normalizedBodyElement[$headerElement] = $this->colorize(
+                    $this->columnColorsMapping[$headerElement],
+                    $row[$headerElement]
+                );
             }
 
             $normalizedBody[] = $normalizedBodyElement;
         }
 
         return $normalizedBody;
+    }
+
+    /**
+     * @param string $color
+     * @param string $string
+     * @return string
+     */
+    private function colorize($color, $string)
+    {
+        return sprintf(
+            '<%s>%s</%s>',
+            $color,
+            $string,
+            $color
+        );
     }
 }
